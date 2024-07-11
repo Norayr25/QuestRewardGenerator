@@ -15,19 +15,19 @@ public class QuestRewardGenerator {
         // Predefined pattern for N = 100
         String pattern = "bbbbbbbbbsbbbbbbbbsbbbsbbbsbbbbsbsbbsbsbbsbbsbsbsbsbssbsbsbsbsbsssbsssbssbssbsssssbssssssbssssssssss";
 
-        final ArrayList<Double> xPositions = new ArrayList<>(pattern.length());
-        final ArrayList<Double> yValues = new ArrayList<>(pattern.length());
+        final ArrayList<Integer> xPositions = new ArrayList<>(pattern.length());
+        final ArrayList<Integer> yValues = new ArrayList<>(pattern.length());
 
         // Populate known positions and values for interpolation.
         for (int i = 0; i < pattern.length(); i++) {
-            xPositions.add((double) i / (pattern.length() - 1)); // Normalize positions to [0, 1]
-            yValues.add(pattern.charAt(i) == 'b' ? 1.0 : 0.0);
+            xPositions.add(i);
+            yValues.add(pattern.charAt(i) == 'b' ? 1 : 0);
         }
 
         // Generate sequence based on interpolation.
         StringBuilder sequence = new StringBuilder();
         for (int i = 0; i < N; i++) {
-            double xPosition = (double) i / (N - 1); // Normalize the position to [0, 1]
+            double xPosition = (double) i * (pattern.length() - 1) / (N - 1); // Map position to the pattern range
             double interpolatedValue = lagrangeInterpolation(xPositions, yValues, xPosition);
             if (interpolatedValue > 0.5) {
                 sequence.append('b');
@@ -48,8 +48,8 @@ public class QuestRewardGenerator {
      * @param xPosition  the x-coordinate where the interpolated value is needed
      * @return the interpolated value at the given xPosition
      */
-    public static double lagrangeInterpolation(final ArrayList<Double> xPositions,
-                                               final ArrayList<Double> yValues,
+    public static double lagrangeInterpolation(final ArrayList<Integer> xPositions,
+                                               final ArrayList<Integer> yValues,
                                                double xPosition) {
         double interpolatedValue = 0.0;
 
